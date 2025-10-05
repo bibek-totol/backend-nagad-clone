@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 
 
-import { initRedis } from "./services/redisClient";
+import { initRedis,getRedis } from "./services/redisClient";
 import { logger } from "./config/logger";
 
 dotenv.config();
@@ -30,13 +30,14 @@ app.use(rateLimit({
   try {
     await mongoose.connect(process.env.MONGO_URI!);
     logger.info("Mongo connected");
-    await initRedis(process.env.REDIS_URL!);
+    await initRedis(); 
     logger.info("Redis connected");
-
     app.use("/auth", authRoutes);
 
-    const port = process.env.PORT || 4000;
-    app.listen(port, () => logger.info(`Server listening ${port}`));
+    const port = Number(process.env.PORT) || 4000;
+app.listen(port, "0.0.0.0", () => {
+  logger.info(`🚀 Server running on http://0.0.0.0:${port}`);
+});
   } catch (err) {
     logger.error("Startup error", err);
     process.exit(1);

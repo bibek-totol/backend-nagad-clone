@@ -4,7 +4,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 interface RefreshToken {
   token: string;
   issuedAt: Date;
-  deviceId?: string;
+  
 }
 
 export interface IUser extends Document {
@@ -20,7 +20,7 @@ export interface IUser extends Document {
 const RefreshSchema = new Schema<RefreshToken>({
   token: { type: String, required: true },
   issuedAt: { type: Date, required: true },
-  deviceId: { type: String }
+  
 });
 
 const UserSchema = new Schema<IUser>(

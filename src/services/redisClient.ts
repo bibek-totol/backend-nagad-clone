@@ -1,15 +1,32 @@
-import { createClient } from "redis";
-import { logger } from "../config/logger";
+import { createClient, RedisClientType } from 'redis';
 
-let client: ReturnType<typeof createClient> | null = null;
+let client: RedisClientType | null = null;
 
-export async function initRedis(url: string) {
-  client = createClient({ url });
-  client.on("error", (err) => logger.error("Redis error", err));
-  await client.connect();
+export async function initRedis(): Promise<RedisClientType> {
+  if (!client) {
+    client = createClient({
+      username: process.env.REDIS_USERNAME,
+      password: process.env.REDIS_PASSWORD,
+      socket: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+      },
+    });
+
+    client.on('error', (err: Error) => {
+      console.error('❌ Redis Client Error:', err);
+    });
+
+    await client.connect();
+    console.log('✅ Redis connected successfully');
+  }
+
+  return client;
 }
 
-export function getRedis() {
-  if (!client) throw new Error("Redis not initialized");
+export function getRedis(): RedisClientType {
+  if (!client) {
+    throw new Error('Redis not initialized! Call initRedis() first.');
+  }
   return client;
 }

@@ -5,7 +5,7 @@ dotenv.config();
 export function signAccess(payload: object) {
   return jwt.sign(
     payload,
-    process.env.JWT_ACCESS_SECRET as string, // cast to string
+    process.env.JWT_ACCESS_SECRET as string, 
     { expiresIn: (process.env.ACCESS_TOKEN_EXP as string) || "15m" } as SignOptions
   );
 }
@@ -13,7 +13,7 @@ export function signAccess(payload: object) {
 export function signRefresh(payload: object) {
   return jwt.sign(
     payload,
-    process.env.JWT_REFRESH_SECRET as string, // cast to string
+    process.env.JWT_REFRESH_SECRET as string, 
     { expiresIn: (process.env.REFRESH_TOKEN_EXP as string) || "30d" } as SignOptions
   );
 }
